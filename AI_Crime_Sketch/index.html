@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Crime Scene Sketch Generator</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b1120;
+            color: #f8fafc;
+        }
+
+        header {
+            padding: 22px 8%;
+            background: #111c31;
+            border-bottom: 1px solid #334155;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #a78bfa;
+            font-size: 25px;
+        }
+
+        header p {
+            margin-bottom: 0;
+            color: #cbd5e1;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .intro {
+            margin-bottom: 25px;
+        }
+
+        .intro h2 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .intro p {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .panel {
+            background: #17243b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 24px;
+            min-width: 0;
+        }
+
+        .panel h3 {
+            margin-top: 0;
+            color: #c4b5fd;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 10px;
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 14px;
+            border: 1px solid #475569;
+            border-radius: 10px;
+            background: #0b1120;
+            color: white;
+            font: inherit;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: 2px solid #8b5cf6;
+        }
+
+        button {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 9px;
+            background: #8b5cf6;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #7c3aed;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .secondary {
+            background: #334155;
+        }
+
+        .secondary:hover {
+            background: #475569;
+        }
+
+        .sketch-area {
+            min-height: 300px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: #0b1120;
+            border: 1px dashed #64748b;
+            border-radius: 12px;
+            color: #cbd5e1;
+        }
+
+        .face-icon {
+            font-size: 75px;
+            margin-bottom: 15px;
+        }
+
+        #message {
+            margin-top: 15px;
+            color: #c4b5fd;
+            line-height: 1.5;
+        }
+
+        .feature-results {
+            margin-top: 18px;
+            padding: 16px;
+            background: #111c31;
+            border: 1px solid #475569;
+            border-radius: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .feature-results[hidden] {
+            display: none;
+        }
+
+        .feature-results h4 {
+            margin: 0 0 12px;
+            color: #c4b5fd;
+        }
+
+        .feature-results p {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .note {
+            margin-top: 25px;
+            padding: 15px;
+            border-left: 3px solid #8b5cf6;
+            background: #111c31;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        footer {
+            padding: 20px;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 750px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+
+            .intro h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>AI NEXUS | Crime Scene Sketch</h1>
+        <p>AI-assisted facial sketch workspace</p>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h2>Witness Description to Facial Sketch</h2>
+            <p>
+                Enter a witness description of facial features.
+                This prototype identifies mentioned features and
+                is designed for future sketch-generation integration.
+            </p>
+        </section>
+
+        <section class="workspace">
+            <div class="panel">
+                <h3>Witness Description</h3>
+
+                <label for="description">
+                    Describe the observed facial features
+                </label>
+
+                <textarea
+                    id="description"
+                    placeholder="Example: An adult with a long face, short wavy hair, thick eyebrows, a straight nose, and a narrow chin."
+                ></textarea>
+
+                <div class="actions">
+                    <button id="generateBtn" type="button">
+                        Analyze Description
+                        
+<button type="button" id="generateSketchBtn">
+    Generate AI Sketch
+</button>
+
+<div id="sketchResult" hidden>
+    <h2>AI-Generated Illustrative Sketch</h2>
+    <img
+        id="sketchImage"
+        alt="AI-generated illustrative facial sketch"
+        style="max-width: 100%; width: 400px; display: block;"
+    >
+    <p id="sketchNotice"></p>
+</div>
+
+                    </button>
+
+                    <button id="voiceBtn" class="secondary" type="button">
+                        🎤 Voice Input
+                    </button>
+                </div>
+
+                <p id="message" role="status" aria-live="polite">
+                    Enter a description to begin.
+                </p>
+
+                <div id="featureResults" class="feature-results" hidden>
+                    <h4>Extracted Facial Features</h4>
+
+                    <p><strong>Face shape:</strong>
+                        <span id="faceShape">Not identified</span></p>
+
+                    <p><strong>Hair:</strong>
+                        <span id="hair">Not identified</span></p>
+
+                    <p><strong>Eyes:</strong>
+                        <span id="eyes">Not identified</span></p>
+
+                    <p><strong>Eyebrows:</strong>
+                        <span id="eyebrows">Not identified</span></p>
+
+                    <p><strong>Nose:</strong>
+                        <span id="nose">Not identified</span></p>
+
+                    <p><strong>Chin:</strong>
+                        <span id="chin">Not identified</span></p>
+
+                    <p><strong>Facial hair:</strong>
+                        <span id="facialHair">Not identified</span></p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Sketch Preview</h3>
+
+                <div class="sketch-area">
+                    <div class="face-icon" aria-hidden="true">👤</div>
+                    <p>Your sketch preview will appear here.</p>
+                    <p>Actual AI image generation is not connected yet.</p>
+                </div>
+
+                <div class="actions">
+                    <button id="editBtn" class="secondary" type="button">
+                        Edit Description
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="note">
+            <strong>Responsible use:</strong>
+            This is an investigative-support prototype.
+            Any future generated sketches should be treated as
+            illustrative only, not proof of identity or a substitute
+            for professional forensic procedures.
+        </div>
+    </main>
+
+    <footer>
+        HackFest 2026 | AI Nexus | Prototype
+    </footer>
+
+    <!-- Load the JavaScript only once. -->
+    <script src="js/script.js"></script>
+</body>
+</html>
